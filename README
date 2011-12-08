@@ -1,0 +1,3 @@
+This is a PHP / MySQL project that allows users to build a membership oriented web site. To get started download the database and import it into a MySQL database called llamafoundation
+
+Then make sure the settings are set right for your environment. The settings.php file is in the includes folder. If you are working locally you can use settings for MAMP or XAMPP. If you are on a linux server, those are included as well.
