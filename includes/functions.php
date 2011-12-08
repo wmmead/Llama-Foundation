@@ -37,8 +37,25 @@ function authenticateperson($login, $password, $key)
 //Display Members
 function display_members()
 {
+	$records_per_page = 5;
+	$current_page ="";
+	$_SESSION['current_page'] = "";
 	
-	$query="select id, fname, lname, email, photo from members order by lname";
+	if(!isset($_GET['pagenumber']))
+	{
+	$pagenumber = 1;   
+	}
+	else
+	{
+	$pagenumber = $_GET['pagenumber'];
+	$current_page = "&pagenumber=$pagenumber";
+	$_SESSION['current_page'] = "?pagenumber=$pagenumber";
+	}
+
+	$startnum = ($pagenumber - 1) * $records_per_page;
+	
+	$query="select id, fname, lname, email, photo from members 
+	order by lname limit $startnum, $records_per_page";
 	$result= mysql_query($query);
 
 	while($row = mysql_fetch_row($result))
@@ -56,6 +73,69 @@ function display_members()
     	print "<p class='memberemail'>$email</p>";
 	}
 }
+
+function get_number_of_pages()
+{
+	$records_per_page = 5;
+	
+	$query = "select count(id) from members";
+	$result = mysql_query($query);
+	$num_of_records = mysql_fetch_row($result);
+	$total_records = $num_of_records[0];
+	$num_of_pages = ceil($total_records/$records_per_page);
+	return $num_of_pages;
+}
+
+function display_page_numbering()
+{
+	$records_per_page = 5;
+	$total_pages = get_number_of_pages();
+	$pagenumber = 1;
+	
+	if (isset($_GET['pagenumber']))
+	{
+		$pagenumber = $_GET['pagenumber'];
+	}
+	
+	$prev = $pagenumber - 1;
+	$next = $pagenumber + 1;
+	
+	if ($total_pages > 1) // none of this will run if we only have 15 records or less.
+	{
+		if ($pagenumber == 1)//previous link not active
+		{
+			print "<span style='font-weight:bold; color:#999999;'>prev</span> |";
+		}
+		else
+		{
+			print "<a href=\"members.php?pagenumber=$prev\">prev</a> |";
+		}
+	
+		for ($i=0; $i<$total_pages; $i++)
+		{
+			$print_page_num = $i+1;
+			if($pagenumber == $print_page_num)
+			{
+				print " <span style='font-weight:bold; color:#f69b0c;'>$print_page_num</span> |";
+			}
+			else
+			{
+				print "<a href='members.php?pagenumber=$print_page_num'> $print_page_num</a> |";
+			}
+		}
+	
+		if ($pagenumber == $total_pages)//next link not active
+		{   
+			print " <span style='font-weight:bold; color:#999999;'>next</span>";
+		}
+	
+		else // next link is active
+		{
+			print "<a href='members.php?pagenumber=$next'> next</a>";
+		}
+	}       
+}
+
 
 //Get Profile Item
 function profile_item($item)

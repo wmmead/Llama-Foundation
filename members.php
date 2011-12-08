@@ -42,6 +42,7 @@
     <div class="column1">
     <h2>Membership Directory</h2>
     	<?php display_members(); ?>
+        <p class="pagenumbering"><?php display_page_numbering(); ?></p>
     </div>
     
     

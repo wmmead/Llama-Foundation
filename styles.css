@@ -213,6 +213,10 @@ ul li, ol li {
 	margin-bottom: 15px;
 }
 
+.pagenumbering {
+	clear:both;
+}
+
 /********* Column 2 Styles **********/
 .column2 {
 	float:left;
